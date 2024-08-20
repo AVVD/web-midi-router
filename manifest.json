@@ -1,0 +1,26 @@
+{
+	"name": "MIDI router PWA",
+	"short_name": "MIDI router",
+	"start_url": ".",
+	"display": "standalone",
+	"icons": [{
+		"src": "icon-144.png",
+		"sizes": "144x144",
+		"type": "image/png"
+	}],
+	"screenshots": [
+		{
+			"src": "screenshot.png",
+			"sizes": "332x500",
+			"type": "image/png",
+			"form_factor": "wide"
+		},
+		{
+			"src": "screenshot.png",
+			"sizes": "332x500",
+			"type": "image/png",
+			"form_factor": "narrow"
+		}
+	]
+
+}

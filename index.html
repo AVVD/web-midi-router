@@ -1,2 +1,37 @@
-coucou
-Bonjour
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>MIDI router PWA</title>
+	<link rel="icon" href="data:,">
+	<link rel="manifest" href="manifest.json">
+	<script defer src="app.js"></script>
+</head>
+<body>
+	<h1>MIDI router PWA</h1>
+	<p>Status: <span id="status">Loading...</span></p>
+	<p><button id="requestMIDIAccess">Request MIDI Access</button></p>
+	<h2>Devices</h2>
+		<table id="inputDeviceTable">
+			<thead><tr><th>Input</th></tr></thead>
+			<tbody></tbody>
+		</table>
+		<table id="outputDeviceTable">
+			<thead><tr><th>Output</th></tr></thead>
+			<tbody></tbody>
+		</table>
+	<h2>Routes</h2>
+		<table id="routeListTable">
+			<tbody></tbody>
+		</table>
+	<h3>Add route</h3>
+		<select id="newRouteInput">
+			<option value="">Select Input</option>
+		</select>
+		<select id="newRouteOutput">
+			<option value="">Select Output</option>
+		</select>
+		<button id="addRouteButton">Add</button>
+</body>
+</html>
