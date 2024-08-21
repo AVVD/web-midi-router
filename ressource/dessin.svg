@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="40mm"
+   height="10mm"
+   viewBox="0 0 40 10"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   sodipodi:docname="dessin.svg"
+   inkscape:export-filename="dessin-400ppp.png"
+   inkscape:export-xdpi="400"
+   inkscape:export-ydpi="400"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     showgrid="true"
+     inkscape:zoom="4"
+     inkscape:cx="103.125"
+     inkscape:cy="21.875"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       id="grid4"
+       units="mm"
+       originx="0"
+       originy="0"
+       spacingx="0.99999998"
+       spacingy="1"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1">
+    <rect
+       x="151.08441"
+       y="113.62546"
+       width="80.970184"
+       height="68.4991"
+       id="rect3" />
+    <rect
+       x="151.08441"
+       y="113.62546"
+       width="80.970184"
+       height="68.4991"
+       id="rect6" />
+  </defs>
+  <g
+     inkscape:label="Back"
+     inkscape:groupmode="layer"
+     id="layer1"
+     sodipodi:insensitive="true">
+    <rect
+       style="fill:#000000;stroke-width:0.0205468"
+       id="rect1"
+       width="40"
+       height="10"
+       x="0"
+       y="0" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Text">
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,-35.111887,-29.084554)"
+       id="text3"
+       style="line-height:0.9;white-space:pre;shape-inside:url(#rect3);display:inline;fill:#ffffff;stroke:#ffffff"><tspan
+         x="151.08398"
+         y="122.4435"
+         id="tspan1">Meb
+</tspan><tspan
+         x="151.08398"
+         y="133.24351"
+         id="tspan2">MIDI
+</tspan><tspan
+         x="151.08398"
+         y="144.04351"
+         id="tspan4">r  uter</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Hide W">
+    <rect
+       style="display:inline;fill:#000000;stroke:#000000;stroke-width:0.24544"
+       id="rect4"
+       width="2.3545601"
+       height="2.4545603"
+       x="5.1227193"
+       y="0.88938576" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Reversed W"
+     style="display:inline">
+    <text
+       xml:space="preserve"
+       style="font-size:3.175px;line-height:0.9;writing-mode:lr-tb;fill:#ffffff;stroke:#ffffff;stroke-width:0.264583"
+       x="-7.7419538"
+       y="-1.044817"
+       id="text4"
+       transform="scale(-1)"><tspan
+         sodipodi:role="line"
+         id="tspan3"
+         style="writing-mode:lr-tb;stroke-width:0.264583"
+         x="-7.7419538"
+         y="-1.044817">M</tspan></text>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="g19"
+     inkscape:label="DIN"
+     style="display:inline">
+    <circle
+       style="fill:#000000;stroke:#ffffff;stroke-width:0.165;stroke-dasharray:none"
+       id="circle14"
+       cx="7.1230793"
+       cy="8.0780621"
+       r="1" />
+    <rect
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.165;stroke-dasharray:none"
+       id="rect14"
+       width="0.2"
+       height="0.2"
+       x="7.0114584"
+       y="7.1065464" />
+    <circle
+       style="fill:#ffffff;stroke:#ffffff;stroke-width:0.165;stroke-dasharray:none"
+       id="circle15"
+       cx="6.5175509"
+       cy="8.1731472"
+       r="0.050000001" />
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#ffffff;stroke-width:0.165;stroke-dasharray:none"
+       id="circle16"
+       cx="7.1274219"
+       cy="8.7231922"
+       r="0.050000001" />
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#ffffff;stroke-width:0.165;stroke-dasharray:none"
+       id="circle17"
+       cx="7.7367597"
+       cy="8.1568203"
+       r="0.050000001" />
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#ffffff;stroke-width:0.165;stroke-dasharray:none"
+       id="circle18"
+       cx="7.540833"
+       cy="8.5206223"
+       r="0.050000001" />
+    <circle
+       style="display:inline;fill:#ffffff;stroke:#ffffff;stroke-width:0.165;stroke-dasharray:none"
+       id="circle19"
+       cx="6.6850715"
+       cy="8.5123539"
+       r="0.050000001" />
+  </g>
+</svg>

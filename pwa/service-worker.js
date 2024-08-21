@@ -27,7 +27,7 @@ self.addEventListener('fetch',event => {
 });
 
 self.addEventListener('activate', event => {
-	const cacheWithelist = [CACHE_NAME];
+	const cacheWhitelist = [CACHE_NAME];
 	event.waitUntil(
 		caches.keys().then(cacheNames => {
 			return Promise.all(

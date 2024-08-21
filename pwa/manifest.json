@@ -3,6 +3,8 @@
 	"short_name": "MIDI router",
 	"start_url": ".",
 	"display": "standalone",
+	"background_color": "black",
+	"theme_color": "black",
 	"icons": [{
 		"src": "icon-144.png",
 		"sizes": "144x144",
