@@ -12,12 +12,13 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 ## Features
 - List available MIDI devices
 - Create routes to forward any MIDI messages from an "Input Device" to an "Output Device"
+- Basic Dark theme
 
 ## Coming Features
 - Filter type of event from an "Input Device" : Note On/Note Off; Pitch bend; Control Change (CC); Program Change (PC); Timing Clock; etc...
 - "Panic!" button to Off all notes on "Output Device"
 - Enhance Devices display with Manufacturer name, etc...
-- Add a Dark mode
+- Add a Dark mode switch
 - Remove a route
 - Save and load a "patch" (list of active routes)
 - Select chanel while creating a route
