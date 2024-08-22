@@ -31,8 +31,11 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 - Enhance concurrent sending. For example if you have more than one "Input Device" routed to the same "Output Device". Maybe it is already supported by Web MIDI API but I haven't tested this.
 - Be able to route an "Input Device" to multiple "Output Device"
 
+## Recent Fix
+- [X] Fix the device list after a refresh
+
 ## Coming Fix
-- Fix the device list after a refresh
+- [ ]
 
 ## Links
 - [Summary of MIDI 1.0 Messages](https://midi.org/summary-of-midi-1-0-messages)
