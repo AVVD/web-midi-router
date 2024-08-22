@@ -12,6 +12,8 @@ function onMIDISuccess(midiAccess){
 	statusElement.textContent = 'MIDI Access Success';
 
 	const newRouteInput = document.getElementById('newRouteInput');
+	newRouteInput.replaceChildren()
+	newRouteInput.options.add(new Option("Select Input",""));
 	for (let input of midiAccess.inputs.values()){
 		console.log(input)
 		inputs.set(input.id, input);
@@ -19,6 +21,8 @@ function onMIDISuccess(midiAccess){
 		//input.onmidimessage = getMIDIMessage;
 	}
 	const newRouteOutput = document.getElementById('newRouteOutput');
+	newRouteOutput.replaceChildren()
+	newRouteOutput.options.add(new Option("Select Output",""));
 	for (let output of midiAccess.outputs.values()){
 		console.log(output)
 		outputs.set(output.id, output);
@@ -29,12 +33,14 @@ function onMIDISuccess(midiAccess){
 
 function refreshDeviceTable() {
 	const inputDeviceTable = document.getElementById('inputDeviceTable');
+	inputDeviceTable.tBodies[0].replaceChildren()
 	for(let input of inputs.values()){
-		inputDeviceTable.insertRow().textContent = input.name; 
+		inputDeviceTable.tBodies[0].insertRow().textContent = input.name; 
 	}
 	const outputDeviceTable = document.getElementById('outputDeviceTable');
+	outputDeviceTable.tBodies[0].replaceChildren()
 	for(let output of outputs.values()){
-		outputDeviceTable.insertRow().textContent = output.name; 
+		outputDeviceTable.tBodies[0].insertRow().textContent = output.name; 
 	}
 }
 
@@ -53,8 +59,9 @@ function createRoute(){
 
 function refreshRouteList(){
 	const routeListTable = document.getElementById('routeListTable');
+	routeListTable.tBodies[0].replaceChildren();
 	for(let route of routes.entries()){
-		routeListTable.insertRow().textContent = route[0].name+' -> '+route[1].name; 
+		routeListTable.tBodies[0].insertRow().textContent = route[0].name+' -> '+route[1].name; 
 	}
 }
 
