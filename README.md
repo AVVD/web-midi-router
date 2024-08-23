@@ -17,13 +17,13 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 ## Coming Features
 - Filter type of event from an "Input Device" : Note On/Note Off; Pitch bend; Control Change (CC); Program Change (PC); Timing Clock; etc...
 - "Panic!" button to Off all notes on "Output Device"
-- Enhance Devices display with Manufacturer name, etc...
+- [X] Enhance Devices display with Manufacturer name, etc...
 - Add a Dark mode switch
 - Remove a route
 - Save and load a "patch" (list of active routes)
 - Select chanel while creating a route
-- Add a list of tested Operating Systems and Web Browser
-- Add a list of tested MIDI Devices
+- [X] Add a list of tested Operating Systems and Web Browser
+- [X] Add a list of tested MIDI Devices
 
 ## Possible Enhancement
 - Add a graphical view like ([qjackctl](https://qjackctl.sourceforge.io/)[^5] for [JACK](https://jackaudio.org/)[^6] and [helvum](https://gitlab.freedesktop.org/pipewire/helvum)[^7] for [pipewire](https://pipewire.org/)[^8])
