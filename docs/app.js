@@ -3,6 +3,8 @@ outputs = new Map();
 routes = new Map();
 
 document.getElementById('requestMIDIAccess').addEventListener('click', () => {
+	const statusElement = document.getElementById('status');
+	statusElement.textContent = 'Loading...';
 	navigator.requestMIDIAccess({'sysex':true,'software':false}).then(onMIDISuccess,onMIDIFailure);
 });
 document.getElementById('addRouteButton').addEventListener('click', createRoute);
@@ -35,12 +37,16 @@ function refreshDeviceTable() {
 	const inputDeviceTable = document.getElementById('inputDeviceTable');
 	inputDeviceTable.tBodies[0].replaceChildren()
 	for(let input of inputs.values()){
-		inputDeviceTable.tBodies[0].insertRow().textContent = input.name; 
+		let newRow = inputDeviceTable.tBodies[0].insertRow();
+		newRow.insertCell().textContent = input.manufacturer;
+		newRow.insertCell().textContent = input.name; 
 	}
 	const outputDeviceTable = document.getElementById('outputDeviceTable');
 	outputDeviceTable.tBodies[0].replaceChildren()
 	for(let output of outputs.values()){
-		outputDeviceTable.tBodies[0].insertRow().textContent = output.name; 
+		let newRow = outputDeviceTable.tBodies[0].insertRow();
+		newRow.insertCell().textContent = output.manufacturer; 
+		newRow.insertCell().textContent = output.name; 
 	}
 }
 
