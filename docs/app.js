@@ -40,6 +40,10 @@ function refreshDeviceTable() {
 		let newRow = inputDeviceTable.tBodies[0].insertRow();
 		newRow.insertCell().textContent = input.manufacturer;
 		newRow.insertCell().textContent = input.name; 
+		newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
+		newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
+		newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
+		newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
 	}
 	const outputDeviceTable = document.getElementById('outputDeviceTable');
 	outputDeviceTable.tBodies[0].replaceChildren()
@@ -47,6 +51,7 @@ function refreshDeviceTable() {
 		let newRow = outputDeviceTable.tBodies[0].insertRow();
 		newRow.insertCell().textContent = output.manufacturer; 
 		newRow.insertCell().textContent = output.name; 
+		newRow.insertCell().appendChild(document.createElement('button')).textContent = 'Note Off'; 
 	}
 }
 

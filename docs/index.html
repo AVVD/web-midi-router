@@ -16,23 +16,28 @@
 	<h2>Devices</h2>
 		<h3>Input</h3>
 			<table id="inputDeviceTable">
-				<thead><tr><th>Manufacturer</th><th>Name</th></tr></thead>
+				<thead><tr><th>Manufacturer</th><th>Name</th><th>Note</th><th>CC</th><th>PC</th><th>Clock</th></tr></thead>
 				<tbody></tbody>
 			</table>
 		<h3>Output</h3>
 			<table id="outputDeviceTable">
-				<thead><tr><th>Manufacturer</th><th>Name</th></tr></thead>
+				<thead><tr><th>Manufacturer</th><th>Name</th><th><button id="panicButton">Panic !</button></th></tr></thead>
 				<tbody></tbody>
 			</table>
 	<h2>Routes</h2>
 	<h3>Add route</h3>
+		<p>
 		<select id="newRouteInput">
 		</select>
 		<select id="newRouteOutput">
 		</select>
 		<button id="addRouteButton">Add</button>
+		</p>
+		<p>
+		<button id="allNoteOff">All Note Off</button>
 		<table id="routeListTable">
 			<tbody></tbody>
 		</table>
+		</p>
 </body>
 </html>
