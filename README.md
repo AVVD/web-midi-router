@@ -52,8 +52,14 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 ## Tested MIDI Device
 |Manufacturer|Name|
 |-|-|
-|Arturia|Minilab 3|
+|Arturia|MiniFuse 2|
+|Arturia|Minilab3|
+|Arturia|MicroFreak|
+|Dirtywave|M8|
 |KORG|NTS-1|
+|Roland|Aira Compact J-6|
+|Roland|Aira Compact S-1|
+|Roland|Aira Compact T-8|
 
 ## Links
 - [Summary of MIDI 1.0 Messages](https://midi.org/summary-of-midi-1-0-messages)
