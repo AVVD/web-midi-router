@@ -40,14 +40,16 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 
 ## Tested Operating System and Browser
 |Operating System|Browser|Web MIDI API|Offline|Installable|
-|-----------|-----------|-----------|-----------|-----------|
+|----------------|-------|------------|-------|-----------|
+|Android|---|No|No|No|
 |ChromeOS|Chrome|Yes|Yes|Yes|
+|iOS|---||||
+|Linux (Fedora 40)|Chromium|Yes|Yes|Yes|
+|Linux (Fedora 40)|Firefox|Yes||No|
+|macOS|---|No|No|No|
 |Windows|Edge|Yes|Yes|Yes|
 |Windows|Chrome||||
 |Windows|Firefox|Yes||No|
-|macOS|---|No|No|No|
-|iOS|---||||
-|Android|---||||
 
 ## Tested MIDI Device
 |Manufacturer|Name|
