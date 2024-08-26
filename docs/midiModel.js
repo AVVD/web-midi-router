@@ -1,4 +1,4 @@
-class MidiModel {
+export class MidiModel {
 	constructor() {
 		this.inputs = new Map();
 		this.outputs = new Map();
@@ -6,64 +6,73 @@ class MidiModel {
 		this.midiAccess = null;
 	}
 
-	initMIDI() {
-		console.log('initMIDI()');
+	initMIDI = () => {
 		//const statusElement = document.getElementById('status');
 		//statusElement.textContent = 'Loading...';
-		navigator.requestMIDIAccess({'sysex':true,'software':false}).then(onMIDISuccess,onMIDIFailure);
+		navigator.requestMIDIAccess({'sysex':true,'software':false}).then(this.onMIDISuccess,this.onMIDIFailure);
 	}
 
-	onMIDISuccess(midiAccess){
-		console.log('onMIDISuccess()');
+	onMIDISuccess = (midiAccess) => {
 		this.midiAccess = midiAccess;
 		//const statusElement = document.getElementById('status');
 		//statusElement.textContent = 'MIDI Access Success';
-		refreshMIDI();
+		this.refreshMIDI();
 	}
 
-	onMIDIFailure(){
+	onMIDIFailure = () => {
 		console.log('onMIDIFailure()');
 		//const statusElement = document.getElementById('status');
 		//statusElement.textContent = 'Failed  to get MIDI access - please check your browser supports WebMIDI.';
 	}
 	
-	refreshMIDI() {
+	bindOnDeviceChanged = (callback) => {
+		this.onDeviceChanged = callback;
+	}
+
+	bindOnRouteChanged = (callback) => {
+		this.onRouteChanged = callback;
+	}
+	
+	refreshMIDI = () => {
 		this.inputs = new Map();
 		for (let input of this.midiAccess.inputs.values()){
-			inputs.set(input.id, input);
+			this.inputs.set(input.id, input);
 		}
-		console.log(inputs);
 		this.outputs = new Map();
 		for (let output of this.midiAccess.outputs.values()){
-			outputs.set(output.id, output);
+			this.outputs.set(output.id, output);
 		}
-		console.log(outputs);
+		this.onDeviceChanged();
 	}
 
-	createRoute(input,output,inputChannel=null,outputchannel=null) {
-		console.log('createRoute()');
-		if (routes.get(input)) {
-			routes.get(input).append(output);
+	addRoute = (inputID,outputID,inputChannel=null,outputchannel=null) => {
+		let input = this.inputs.get(inputID);
+		let output = this.outputs.get(outputID);
+
+		if (this.routes.get(input)) {
+			this.routes.get(input).push(output);
 		}else{
-			route.set(input,[output]);
-			input.onmidimessage = forwareMIDIMessage;
+			this.routes.set(input,[output]);
+			input.onmidimessage = this.forwareMIDIMessage;
 		}
+		this.onRouteChanged();
 	}
 
-	deleteRoute(input,output,inputChannel=null,outputchannel=null) {
+	deleteRoute = (input,output,inputChannel=null,outputchannel=null) => {
 		if (routes.get(input)){
 			routes.get(input).remove(output);
 			if (routes.get(input).size < 1){
 				input.onmidimessage = null;
 			}
 		}
+		this.onRouteChanged();
 	}
 
-	forwardMIDIMessage(message) {
-		for (let output of routes.get(message.srcElement)) {
-			output.send(message.data)
+	forwardMIDIMessage = (message) => {
+		for (let outputs of routes.get(message.srcElement)) {
+			for (let output of outputs) {
+				output.send(message.data)
+			}
 		}
 	}
 }
-
-export { MidiModel };

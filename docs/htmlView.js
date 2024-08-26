@@ -1,10 +1,10 @@
-class HtmlView {
-	createElement(tag, id) {
+export class HtmlView {
+	createElement = (tag, id) => {
 		const element = document.createElement(tag);
 		if (id) element.id = id;
 		return element;
 	}
-	getElement(id){
+	getElement = (id) => {
 		const element = document.getElementById(id);
 		return element;
 	}
@@ -48,6 +48,7 @@ class HtmlView {
 		newRow.insertCell().textContent = "CC";
 		newRow.insertCell().textContent = "PC";
 		newRow.insertCell().textContent = "Clock";
+		this.inputDeviceTable.append(this.createElement('tbody'));
 		this.app.append(this.title, this.inputDeviceTable);
 
 		//MIDI Output devices
@@ -60,6 +61,7 @@ class HtmlView {
 		newRow.insertCell().textContent = "Manufacturer";
 		newRow.insertCell().textContent = "Name";
 		newRow.insertCell().appendChild(this.createElement('button')).textContent = "Panic !";
+		this.outputDeviceTable.append(this.createElement('tbody'));
 		this.app.append(this.title, this.outputDeviceTable);
 
 		//MIDI Route section
@@ -90,68 +92,72 @@ class HtmlView {
 		newRow.insertCell().textContent = "Enabled";
 		newRow.insertCell().textContent = "Route";
 		newRow.insertCell().textContent = "Delete";
+		this.routeListTable.append(this.createElement('tbody'));
 		this.app.append(p, this.allNoteOffButton, this.routeListTable);
 	}
 
-	refreshAll(model){
+	refreshAll = (model) => {
 		refreshDevices(model.inputs, model.outputs);
 		refreshRouteList(model.routes);
 	}
 
-	setStatus(textStatus){
+	setStatus = (textStatus) =>{
 		this.textStatus.textContent = textStatus;
 	}
 	
-	refreshDevices(inputs, outputs){
+	refreshDevices = (inputs, outputs) => {
 		this.inputDeviceTable.tBodies[0].replaceChildren();
 		this.newRouteInput.replaceChildren();
 		this.newRouteInput.options.add(new Option("Select Input",""));
-		for (let input of inputs.values) {
+		for (let input of inputs.values()) {
 			let newRow = this.inputDeviceTable.tBodies[0].insertRow();
 			newRow.insertCell().textContent = input.manufacturer;
 			newRow.insertCell().textContent = input.name; 
-			newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
-			newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
-			newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
-			newRow.insertCell().appendChild(document.createElement('input')).setAttribute('type','checkbox'); 
+			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox'); 
+			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox'); 
+			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox'); 
+			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox'); 
 			
 			this.newRouteInput.options.add(new Option(input.name,input.id));
 		}
 
 		this.outputDeviceTable.tBodies[0].replaceChildren();
 		this.newRouteOutput.replaceChildren();
-		this.newRouteInput.options.add(new Option("Select Output",""));
+		this.newRouteOutput.options.add(new Option("Select Output",""));
 		for(let output of outputs.values()){
 			let newRow = this.outputDeviceTable.tBodies[0].insertRow();
 			newRow.insertCell().textContent = output.manufacturer;
 			newRow.insertCell().textContent = output.name;
-			newRow.insertCell().appendChild(document.createElement('button')).textContent = 'Note Off';
+			newRow.insertCell().appendChild(this.createElement('button')).textContent = 'Note Off';
 
 			this.newRouteOutput.options.add(new Option(output.name,output.id));
 		}
 	}
 
-	refreshRouteList(routes) {
+	refreshRouteList = (routes) => {
 		this.routeListTable.tBodies[0].replaceChildren();
-		for (let route in routes.entries()){
-			routeListTable.tBodies[0].insterRow().textContent = route[0].name+' -> '+route[1].name;
+		for (let route of routes.entries()){
+			for (let dest of route[1]){
+				let newRow = this.routeListTable.tBodies[0].insertRow();
+				newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox');
+				newRow.insertCell().textContent = route[0].name+' -> '+dest.name;
+				newRow.insertCell().appendChild(this.createElement('button')).textContent = 'X';
+			}
 		}
 	}
 
-	bindRequestMidiAccess(handler) {
+	bindRequestMidiAccess = (handler) => {
 		this.requestMIDIAccessButton.addEventListener('click', event => {
 			event.preventDefault();
 			handler();
 		});
 	}
 
-	bindAddRoute(handler) {
+	bindAddRoute = (handler) => {
 		this.addRouteButton.addEventListener('click', event => {
 			event.preventDefault();
-			handler(this.newRouteInput,this.newRouteOutput);
+			handler(this.newRouteInput.value,this.newRouteOutput.value);
 		});
 	}
 
 }
-
-export { HtmlView };
