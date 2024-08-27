@@ -17,6 +17,10 @@ export class HtmlView {
 		title = this.createElement('h1');
 		title.textContent = 'MIDI router PWA';
 		this.app.append(title);
+		this.switchDarkModeButton = this.createElement('button');
+		this.switchDarkModeButton.textContent = 'Dark/Light';
+		this.bindSwitchDarkMode();
+		this.app.append(this.switchDarkModeButton);
 
 		p = this.createElement('p');
 		p.textContent = "Status: ";
@@ -37,8 +41,8 @@ export class HtmlView {
 		this.app.append(title);
 
 		//MIDI Input devices
-		this.title = this.createElement('h3');
-		this.title.textContent = 'Inputs';
+		title = this.createElement('h3');
+		title.textContent = 'Inputs';
 		this.inputDeviceTable = this.createElement('table','inputDeviceTable');
 		this.inputDeviceTable.append(this.createElement('thead'));
 		let newRow = this.inputDeviceTable.tHead.insertRow()
@@ -49,12 +53,11 @@ export class HtmlView {
 		newRow.insertCell().textContent = "PC";
 		newRow.insertCell().textContent = "Clock";
 		this.inputDeviceTable.append(this.createElement('tbody'));
-		this.app.append(this.title, this.inputDeviceTable);
+		this.app.append(title, this.inputDeviceTable);
 
 		//MIDI Output devices
-		this.title = this.createElement('h3');
-		this.title.textContent = 'Outputs';
-		this.app.append();
+		title = this.createElement('h3');
+		title.textContent = 'Outputs';
 		this.outputDeviceTable = this.createElement('table','outputDeviceTable');
 		this.outputDeviceTable.append(this.createElement('thead'));
 		newRow = this.outputDeviceTable.tHead.insertRow()
@@ -62,7 +65,7 @@ export class HtmlView {
 		newRow.insertCell().textContent = "Name";
 		newRow.insertCell().appendChild(this.createElement('button')).textContent = "Panic !";
 		this.outputDeviceTable.append(this.createElement('tbody'));
-		this.app.append(this.title, this.outputDeviceTable);
+		this.app.append(title, this.outputDeviceTable);
 
 		//MIDI Route section
 		title = this.createElement('h2');
@@ -144,6 +147,23 @@ export class HtmlView {
 				newRow.insertCell().appendChild(this.createElement('button')).textContent = 'X';
 			}
 		}
+	}
+
+	bindSwitchDarkMode = () => {
+		this.switchDarkModeButton.addEventListener('click', event => {
+			event.preventDefault();
+			for (let rule of document.styleSheets[0].cssRules){
+				if (rule.selectorText === 'html') {
+					if (rule.style.color === 'black'){
+						rule.style.color = 'lightgrey';
+						rule.style.backgroundColor = 'black';
+					} else {
+						rule.style.color = 'black';
+						rule.style.backgroundColor = 'white';
+					}
+				}
+			}
+		});
 	}
 
 	bindRequestMidiAccess = (handler) => {
