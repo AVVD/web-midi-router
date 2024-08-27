@@ -23,7 +23,7 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 ## Coming Features
 - Filter type of event from an "Input Device" : Note On/Note Off; Pitch bend; Control Change (CC); Program Change (PC); Timing Clock; etc...
 - "Panic!" button to Off all notes on "Output Device"
-- Add a Dark mode switch
+- [X] Add a Dark mode switch
 - Remove a route
 - Save and load a "patch" (list of active routes)
 - Select chanel while creating a route
