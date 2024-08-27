@@ -3,10 +3,15 @@ export class HtmlController {
 		this.model = model;
 		this.view = view;
 
-		this.view.bindRequestMidiAccess(this.handleRequestMidiAccess);
-		this.view.bindAddRoute(this.handleAddRoute);
+		this.model.bindOnMidiStatusChanged(this.onMidiStatusChanged);
 		this.model.bindOnDeviceChanged(this.onDeviceListChanged);
 		this.model.bindOnRouteChanged(this.onRouteListChanged);
+		this.view.bindRequestMidiAccess(this.handleRequestMidiAccess);
+		this.view.bindAddRoute(this.handleAddRoute);
+	}
+
+	onMidiStatusChanged = (statusText) => {
+		this.view.setStatus(statusText);
 	}
 
 	onDeviceListChanged = () => {
@@ -14,7 +19,6 @@ export class HtmlController {
 	}
 
 	onRouteListChanged = () => {
-		console.log(this.model.routes);
 		this.view.refreshRouteList(this.model.routes);
 	}
 

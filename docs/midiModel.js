@@ -7,6 +7,7 @@ export class MidiModel {
 	}
 
 	initMIDI = () => {
+		this.onMidiStatusChanged('Loading...');
 		//const statusElement = document.getElementById('status');
 		//statusElement.textContent = 'Loading...';
 		navigator.requestMIDIAccess({'sysex':true,'software':false}).then(this.onMIDISuccess,this.onMIDIFailure);
@@ -16,6 +17,7 @@ export class MidiModel {
 		this.midiAccess = midiAccess;
 		//const statusElement = document.getElementById('status');
 		//statusElement.textContent = 'MIDI Access Success';
+		this.onMidiStatusChanged('MIDI Access Success');
 		this.refreshMIDI();
 	}
 
@@ -23,8 +25,13 @@ export class MidiModel {
 		console.log('onMIDIFailure()');
 		//const statusElement = document.getElementById('status');
 		//statusElement.textContent = 'Failed  to get MIDI access - please check your browser supports WebMIDI.';
+		this.onMidiStatusChanged('Failed  to get MIDI access - please check your browser supports WebMIDI.');
 	}
 	
+	bindOnMidiStatusChanged = (callback) => {
+		this.onMidiStatusChanged = callback;
+	}
+
 	bindOnDeviceChanged = (callback) => {
 		this.onDeviceChanged = callback;
 	}
@@ -53,15 +60,15 @@ export class MidiModel {
 			this.routes.get(input).push(output);
 		}else{
 			this.routes.set(input,[output]);
-			input.onmidimessage = this.forwareMIDIMessage;
+			input.onmidimessage = this.forwardMIDIMessage;
 		}
 		this.onRouteChanged();
 	}
 
 	deleteRoute = (input,output,inputChannel=null,outputchannel=null) => {
-		if (routes.get(input)){
-			routes.get(input).remove(output);
-			if (routes.get(input).size < 1){
+		if (this.routes.get(input)){
+			this.routes.get(input).remove(output);
+			if (this.routes.get(input).size < 1){
 				input.onmidimessage = null;
 			}
 		}
@@ -69,10 +76,8 @@ export class MidiModel {
 	}
 
 	forwardMIDIMessage = (message) => {
-		for (let outputs of routes.get(message.srcElement)) {
-			for (let output of outputs) {
-				output.send(message.data)
-			}
+		for (let output of this.routes.get(message.srcElement)) {
+			output.send(message.data)
 		}
 	}
 }
