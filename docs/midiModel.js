@@ -1,7 +1,19 @@
+export class MidiRoute {
+	constructor(input,output,inputChannel=0,outputChannel=0) {
+		this.input = input;
+		this.inputChannel = inputChannel;
+		this.output = output;
+		this.outputChannel = outputChannel;
+	}
+}
+
 export class MidiModel {
 	constructor() {
-		this.inputs = new Map();
-		this.outputs = new Map();
+		this.inputs = new Array();
+		this.outputs = new Array();
+		// this.routeTable: Array({inputId, iChannel, outputId, oChannel});
+		this.routeTable = new Array();
+		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Uint8Array(oChannel))))
 		this.routes = new Map();
 		this.midiAccess = null;
 	}
@@ -41,43 +53,103 @@ export class MidiModel {
 	}
 	
 	refreshMIDI = () => {
-		this.inputs = new Map();
+		this.inputs = new Array();
 		for (let input of this.midiAccess.inputs.values()){
-			this.inputs.set(input.id, input);
+			this.inputs.push(input);
 		}
-		this.outputs = new Map();
+		this.outputs = new Array();
 		for (let output of this.midiAccess.outputs.values()){
-			this.outputs.set(output.id, output);
+			this.outputs.push(output);
 		}
 		this.onDeviceChanged();
 	}
 
-	addRoute = (inputID,outputID,inputChannel=null,outputchannel=null) => {
-		let input = this.inputs.get(inputID);
-		let output = this.outputs.get(outputID);
-
-		if (this.routes.get(input)) {
-			this.routes.get(input).push(output);
-		}else{
-			this.routes.set(input,[output]);
-			input.onmidimessage = this.forwardMIDIMessage;
+	addRoute = (inputId ,outputId, inputChannel=0, outputChannel=0) => {
+		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Uint8Array(oChannel))))
+		try {
+			if (this.routes.get(inputId).get(inputChannel).get(outputId).indexOf(outputChannel)) return;
+		} catch (e) {
+			if (! (e instanceof TypeError) ) throw e;
 		}
+
+		if (!this.routes.get(inputId)) {
+			this.routes.set(inputId, new Map());
+			this.inputs.get(inputId).onmidimessage = this.forwardMIDIMessage;
+		}
+		if (!this.routes.get(inputId).get(inputChannel)) this.routes.get(inputId).set(inputChannel, new Map());
+		if (!this.routes.get(inputId).get(inputChannel).get(outputId)) this.routes.get(inputId).get(inputChannel).set(outputId, new Uint8Array());
+
+		this.routes.get(inputId).get(inputChannel).get(outputId).push(outputChannel);
+
+		this.routeTable.push({inputId, inputChannel, outputId, outputChannel});
+
 		this.onRouteChanged();
 	}
 
-	deleteRoute = (input,output,inputChannel=null,outputchannel=null) => {
+	deleteRoute = (routeTableIndex) => {
+		let route = this.routeTable.get(routeTableIndex);
+
+		// this.routeTable: Array({inputId, iChannel, outputId, oChannel});
+		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Uint8Array(oChannel))))
+		
+
+		this.routes.get(inputId).get(inputChannel).set(outputId, outputChannel);
+		if (!this.routes.get(inputId).get(inputChannel).get(outputId)) this.routes.get(inputId).get(inputChannel).set(outputId, );
+		if (!this.routes.get(inputId).get(inputChannel)) this.routes.get(inputId).set(inputChannel, new Map());
+		if (!this.routes.get(inputId)) {
+			this.routes.set(inputId, new Map());
+			this.inputs.get(inputId).onmidimessage = this.forwardMIDIMessage;
+		}
+
+		this.routeTable.push({inputId, inputChannel, outputId, outputChannel});
+
+		//
 		if (this.routes.get(input)){
 			this.routes.get(input).remove(output);
 			if (this.routes.get(input).size < 1){
 				input.onmidimessage = null;
 			}
 		}
+
+
 		this.onRouteChanged();
 	}
 
 	forwardMIDIMessage = (message) => {
+		// this.routeTable = Array({inputId, iChannel, outputId, oChannel);
+		// this.routes = Map(inputId, Map(iChannel , Map(outputId, oChannel)))
+		
+		/* ichannel = message.data[0] & 15;
+		 * route = this.routes.get(message.srcElement)
+		 * route.get(0).map();
+		 *
+		 * route.get((ichannel).map((output) => {
+		 * 	output.map((ochannel) => {
+		 * 		output.send(message.data); // but replace channel with & or |
+		 * 	});
+		 * });
+		 *
+		 *
+		 *
+		 *
+		 * for (ichannel of this.routes.get(message.srcElement)) {
+		 * 	for (output of ichannel) {
+		 * 		for (ochannel of output) {
+		 * 			output.send(message.data & ochannel);
+		 * 		}
+		 * 	}
+		 * }
+		 */
 		for (let output of this.routes.get(message.srcElement)) {
 			output.send(message.data)
 		}
+	}
+
+	panic = () => {
+		throw("panic() not implemented yet.")
+	}
+
+	allNoteOff = () => {
+		throw("allNoteOff() not implemented yet.")
 	}
 }

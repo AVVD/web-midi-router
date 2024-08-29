@@ -8,6 +8,8 @@ export class HtmlController {
 		this.model.bindOnRouteChanged(this.onRouteListChanged);
 		this.view.bindRequestMidiAccess(this.handleRequestMidiAccess);
 		this.view.bindAddRoute(this.handleAddRoute);
+		this.view.bindPanicButton(this.handlePanic);
+		this.view.bindAllNoteOffButton(this.handleAllNoteOff)
 	}
 
 	onMidiStatusChanged = (statusText) => {
@@ -27,9 +29,17 @@ export class HtmlController {
 	}
 
 	handleAddRoute = (inputID,outputID) => {
-		this.model.addRoute(inputID,outputID)
+		this.model.addRoute(inputID,outputID);
 	}
 	//handleDeleteRoute
 	//handleDisableRoute
 	//handleEnableRoute
+
+	handlePanic = () => {
+		this.model.panic();
+	}
+
+	handleAllNoteOff = () => {
+	        this.model.allNoteOff();
+	}
 }

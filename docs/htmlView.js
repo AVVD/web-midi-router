@@ -63,7 +63,9 @@ export class HtmlView {
 		newRow = this.outputDeviceTable.tHead.insertRow()
 		newRow.insertCell().textContent = "Manufacturer";
 		newRow.insertCell().textContent = "Name";
-		newRow.insertCell().appendChild(this.createElement('button')).textContent = "Panic !";
+		this.panicButton = this.createElement('button');
+		this.panicButton.textContent = "Panic !";
+		newRow.insertCell().appendChild(this.panicButton);
 		this.outputDeviceTable.append(this.createElement('tbody'));
 		this.app.append(title, this.outputDeviceTable);
 
@@ -173,10 +175,24 @@ export class HtmlView {
 		});
 	}
 
+	bindPanicButton = (handler) => {
+		this.panicButton.addEventListener('click', event => {
+			event.preventDefault();
+			handler();
+		});
+	}
+
 	bindAddRoute = (handler) => {
 		this.addRouteButton.addEventListener('click', event => {
 			event.preventDefault();
 			handler(this.newRouteInput.value,this.newRouteOutput.value);
+		});
+	}
+
+	bindAllNoteOffButton = (handler) => {
+		this.allNoteOffButton.addEventListener('click', event => {
+			event.preventDefault();
+			handler();
 		});
 	}
 
