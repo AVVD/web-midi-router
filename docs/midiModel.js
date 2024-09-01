@@ -55,58 +55,72 @@ export class MidiModel {
 		this.onDeviceChanged();
 	}
 
-	addRoute = (inputId ,outputId, inputChannel=-1, outputChannel=-1) => {
-		if((inputChannel < -1 || inputChannel > 15) || (outputChannel < -1 || outputChannel > 15)) return;
+	addRoute = (inputIndex ,outputIndex, inputChannel=-1, outputChannel=-1) => {
+		if((inputChannel < -1 || inputChannel > 15) || (outputChannel < -2 || outputChannel > 15)) { return; }
+		console.log(this.routeTable);
+		console.log(this.routes);
 		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Array(oChannel))))
 		try {
-			if (this.routes.get(inputId).get(inputChannel).get(outputId).indexOf(outputChannel)) return;
+			if (this.routes.get(inputIndex).get(inputChannel).get(outputIndex).indexOf(outputChannel) > -1) { return; }
 		} catch (e) {
 			if (! (e instanceof TypeError) ) throw e;
 		}
 
-		if (!this.routes.get(inputId)) {
-			this.routes.set(inputId, new Map());
-			this.inputs.at(inputId).onmidimessage = this.forwardMIDIMessage;
+		if (!this.routes.get(inputIndex)) {
+			this.routes.set(inputIndex, new Map());
+			this.inputs.at(inputIndex).onmidimessage = this.forwardMIDIMessage;
 		}
-		if (!this.routes.get(inputId).get(inputChannel)) this.routes.get(inputId).set(inputChannel, new Map());
-		if (!this.routes.get(inputId).get(inputChannel).get(outputId)) this.routes.get(inputId).get(inputChannel).set(outputId, new Array());
+		if (!this.routes.get(inputIndex).get(inputChannel)) this.routes.get(inputIndex).set(inputChannel, new Map());
+		if (!this.routes.get(inputIndex).get(inputChannel).get(outputIndex)) this.routes.get(inputIndex).get(inputChannel).set(outputIndex, new Array());
 
-		this.routes.get(inputId).get(inputChannel).get(outputId).push(outputChannel);
+		this.routes.get(inputIndex).get(inputChannel).get(outputIndex).push(outputChannel);
 
-		this.routeTable.push({'input':this.inputs.at(inputId), inputChannel, 'output':this.outputs.at(outputId), outputChannel});
+		this.routeTable.push({'input':this.inputs.at(inputIndex), inputChannel, 'output':this.outputs.at(outputIndex), outputChannel});
+
 		console.log(this.routeTable);
+		console.log(this.routes);
 
 		this.onRouteChanged();
 	}
 
 	deleteRoute = (routeTableIndex) => {
+		console.log("deleteRoute");
+		console.log(this.routeTable);
+		console.log(this.routes);
 		console.log(routeTableIndex);
+
 		let route = this.routeTable.at(routeTableIndex);
 		console.log(route);
 
 		// this.routeTable: Array({input, iChannel, output, oChannel});
 		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Array(oChannel))))
+
+		let inputIndex = this.inputs.indexOf(route.input);
+		let inputChannel = route.inputChannel;
+		console.log(inputChannel);
+		let outputIndex = this.outputs.indexOf(route.output);
+		let outputChannel = route.outputChannel;
+		console.log(outputChannel);
+		console.log(this.routes);
+		console.log(this.routes.get(inputIndex));
+		console.log(this.routes.get(inputIndex).get(inputChannel));
+		console.log(this.routes.get(inputIndex).get(inputChannel).get(outputIndex));
 		
-		throw('Not Implemented yet: deleteRoute');
-		// TODO
-		this.routes.get(inputId).get(inputChannel).set(outputId, outputChannel);
-		if (!this.routes.get(inputId).get(inputChannel).get(outputId)) this.routes.get(inputId).get(inputChannel).set(outputId, );
-		if (!this.routes.get(inputId).get(inputChannel)) this.routes.get(inputId).set(inputChannel, new Map());
-		if (!this.routes.get(inputId)) {
-			this.routes.set(inputId, new Map());
-			this.inputs.get(inputId).onmidimessage = this.forwardMIDIMessage;
-		}
-
-		this.routeTable.push({inputId, inputChannel, outputId, outputChannel});
-
-		//
-		if (this.routes.get(input)){
-			this.routes.get(input).remove(output);
-			if (this.routes.get(input).size < 1){
-				input.onmidimessage = null;
+		let outputChannels = this.routes.get(inputIndex).get(inputChannel).get(outputIndex);
+		outputChannels.splice(outputChannels.indexOf(outputChannel),1);
+		if (outputChannels.length < 1) {
+			this.routes.get(inputIndex).get(inputChannel).delete(outputIndex);
+			if (this.routes.get(inputIndex).get(inputChannel).size < 1) {
+				this.routes.delete(inputIndex);
+				this.inputs.at(inputIndex).onmidimessage = null;
 			}
+		}else{
+			this.routes.get(inputIndex).get(inputChannel).set(outputIndex,outputChannels);
 		}
 
+		this.routeTable.splice(routeTableIndex,1);
+		console.log(this.routeTable);
+		console.log(this.routes);
 
 		this.onRouteChanged();
 	}
@@ -114,26 +128,34 @@ export class MidiModel {
 	forwardMIDIMessage = (message) => {
 		// this.routeTable = Array({inputId, iChannel, outputId, oChannel);
 		// this.routes = Map(inputId, Map(iChannel , Map(outputId, Array(oChannel))))
+		console.log('Received: ',message.srcElement.name, ' : ', message.data);
 
 		console.log(message.data);
 		
 		ichannel = message.data[0] & 15;
 		console.log('iChannel: ', ichannel);
 
-		route = this.routes.get(message.srcElement)
+		let route = this.routes.get(message.srcElement)
 		console.log('route: ', route);
 
+		// if input channel === -1, means listen all iChannels, it assume -1 in oChannel
+		// need to be improved:
+		// if oChannel = -1 : all duplicate message on all oChannels
+		// if oChannel = -2 : thru to outputs
+		// or forward to set ochannels by outputs
 		console.log('iChannel all ? ', route.get(-1));
 		if (route.get(-1)) {
 		 	route.get(0).forEach((outputId) => {
-				console.log('outputId: ', outputId);
-		 		console.log('data: ', message.data);
-				//outputs.get(outputId).send(message.data);
+				console.log('output: ', this.outputs.at(outputId), ' : ', message.data);
+				this.outputs.get(outputId).send(message.data);
 		 	});
+			return;
 		}
 
 		route.get(ichannel).forEach((outputId) => {
 			console.log('outputId: ', outputId);
+			//need to add case if oChannel === -1: means All so duplicate message on each oChannels
+			//need to add case if oChannel === -2: means thru, just send message as is to outputs
 		 	outputId.forEach((oChannel) => {
 				console.log('oChannel: ', oChannel);
 				console.log('data: ',message.data);
@@ -188,7 +210,7 @@ export class MidiModel {
 		this.routeTable.forEach((route) => {
 			let output = route[2];
 			let oChannel = route[3];
-			if (oChannel === -1) {
+			if (oChannel === -1 || oChannel === -2) {
 				channels.forEach((channel) => {
 					output.send([0xb0 + channel, 0x7b, 0x00]);
 				});

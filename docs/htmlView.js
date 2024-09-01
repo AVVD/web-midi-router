@@ -87,6 +87,7 @@ export class HtmlView {
 		this.addRouteButton = this.createElement('button','addRouteButton');
 		this.addRouteButton.textContent = "Add";
 		this.newRouteInputChannel.options.add(new Option('All', -1));
+		this.newRouteOutputChannel.options.add(new Option('Thru', -2));
 		this.newRouteOutputChannel.options.add(new Option('All', -1));
 		[...Array(16).keys()].forEach((channel) => {
 			this.newRouteInputChannel.options.add(new Option(channel+1, channel));
@@ -161,7 +162,18 @@ export class HtmlView {
 			let newRow = this.routeListTable.tBodies[0].insertRow();
 			newRow.id = index;
 			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox');
-			newRow.insertCell().textContent = route['input'].name+':'+(route['inputChannel']+1)+' -> '+route['output'].name+':'+(route['outputChannel']+1);
+			let ichan = route['inputChannel'];
+			switch (ichan){
+				case -1: ichan = 'All'; break;
+				default: ichan += 1;
+			}
+			let ochan = route['outputChannel'];
+			switch (ochan) {
+				case -2: ochan = "Thru"; break;
+				case -1: ochan = 'All'; break;
+				default: ochan += 1;
+			}
+			newRow.insertCell().textContent = route['input'].name+':'+ichan+' -> '+route['output'].name+':'+ochan;
 			let deleteButton = newRow.insertCell().appendChild(this.createElement('button'));
 			deleteButton.textContent = 'X';
 			deleteButton.addEventListener('click', event => {
@@ -208,7 +220,7 @@ export class HtmlView {
 	bindAddRoute = (handler) => {
 		this.addRouteButton.addEventListener('click', event => {
 			event.preventDefault();
-			handler(this.newRouteInput.value, this.newRouteOutput.value, parseInt(this.newRouteInputChannel.value), parseInt(this.newRouteOutputChannel.value));
+			handler(parseInt(this.newRouteInput.value), parseInt(this.newRouteOutput.value), parseInt(this.newRouteInputChannel.value), parseInt(this.newRouteOutputChannel.value));
 		});
 	}
 
