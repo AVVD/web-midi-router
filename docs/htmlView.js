@@ -63,7 +63,9 @@ export class HtmlView {
 		newRow = this.outputDeviceTable.tHead.insertRow()
 		newRow.insertCell().textContent = "Manufacturer";
 		newRow.insertCell().textContent = "Name";
-		newRow.insertCell().appendChild(this.createElement('button')).textContent = "Panic !";
+		this.panicButton = this.createElement('button');
+		this.panicButton.textContent = "Panic !";
+		newRow.insertCell().appendChild(this.panicButton);
 		this.outputDeviceTable.append(this.createElement('tbody'));
 		this.app.append(title, this.outputDeviceTable);
 
@@ -79,10 +81,19 @@ export class HtmlView {
 
 		p = this.createElement('p');
 		this.newRouteInput = this.createElement('select','newRouteInput');
+		this.newRouteInputChannel = this.createElement('select','newRouteInputChannel');
 		this.newRouteOutput = this.createElement('select','newRouteOutput');
+		this.newRouteOutputChannel = this.createElement('select','newRouteOutputChannel');
 		this.addRouteButton = this.createElement('button','addRouteButton');
 		this.addRouteButton.textContent = "Add";
-		p.append(this.newRouteInput, this.newRouteOutput, this.addRouteButton);
+		this.newRouteInputChannel.options.add(new Option('All', -1));
+		this.newRouteOutputChannel.options.add(new Option('Thru', -2));
+		this.newRouteOutputChannel.options.add(new Option('All', -1));
+		[...Array(16).keys()].forEach((channel) => {
+			this.newRouteInputChannel.options.add(new Option(channel+1, channel));
+			this.newRouteOutputChannel.options.add(new Option(channel+1, channel));
+		});
+		p.append(this.newRouteInput, ':', this.newRouteInputChannel, ' -> ', this.newRouteOutput, ':', this.newRouteOutputChannel, ' ', this.addRouteButton);
 
 		//All Note Off control
 		this.allNoteOffButton = this.createElement('button','allNoteOff');
@@ -112,8 +123,11 @@ export class HtmlView {
 		this.inputDeviceTable.tBodies[0].replaceChildren();
 		this.newRouteInput.replaceChildren();
 		this.newRouteInput.options.add(new Option("Select Input",""));
-		for (let input of inputs.values()) {
+		for (let index_input of inputs.entries()) {
+			let index = index_input[0];
+			let input = index_input[1];
 			let newRow = this.inputDeviceTable.tBodies[0].insertRow();
+			newRow.id = index;
 			newRow.insertCell().textContent = input.manufacturer;
 			newRow.insertCell().textContent = input.name; 
 			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox'); 
@@ -121,31 +135,50 @@ export class HtmlView {
 			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox'); 
 			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox'); 
 			
-			this.newRouteInput.options.add(new Option(input.name,input.id));
+			this.newRouteInput.options.add(new Option(input.name, index));
 		}
 
 		this.outputDeviceTable.tBodies[0].replaceChildren();
 		this.newRouteOutput.replaceChildren();
 		this.newRouteOutput.options.add(new Option("Select Output",""));
-		for(let output of outputs.values()){
+		for(let index_output of outputs.entries()){
+			let index = index_output[0];
+			let output = index_output[1];
 			let newRow = this.outputDeviceTable.tBodies[0].insertRow();
+			newRow.id = index;
 			newRow.insertCell().textContent = output.manufacturer;
 			newRow.insertCell().textContent = output.name;
 			newRow.insertCell().appendChild(this.createElement('button')).textContent = 'Note Off';
 
-			this.newRouteOutput.options.add(new Option(output.name,output.id));
+			this.newRouteOutput.options.add(new Option(output.name,index));
 		}
 	}
 
 	refreshRouteList = (routes) => {
 		this.routeListTable.tBodies[0].replaceChildren();
-		for (let route of routes.entries()){
-			for (let dest of route[1]){
-				let newRow = this.routeListTable.tBodies[0].insertRow();
-				newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox');
-				newRow.insertCell().textContent = route[0].name+' -> '+dest.name;
-				newRow.insertCell().appendChild(this.createElement('button')).textContent = 'X';
+		for (let index_route of routes.entries()){
+			let index = index_route[0];
+			let route = index_route[1]
+			let newRow = this.routeListTable.tBodies[0].insertRow();
+			newRow.id = index;
+			newRow.insertCell().appendChild(this.createElement('input')).setAttribute('type','checkbox');
+			let ichan = route['inputChannel'];
+			switch (ichan){
+				case -1: ichan = 'All'; break;
+				default: ichan += 1;
 			}
+			let ochan = route['outputChannel'];
+			switch (ochan) {
+				case -2: ochan = "Thru"; break;
+				case -1: ochan = 'All'; break;
+				default: ochan += 1;
+			}
+			newRow.insertCell().textContent = route['input'].name+':'+ichan+' -> '+route['output'].name+':'+ochan;
+			let deleteButton = newRow.insertCell().appendChild(this.createElement('button'));
+			deleteButton.textContent = 'X';
+			deleteButton.addEventListener('click', event => {
+				this.deleteRouteButton(deleteButton.parentElement.parentElement.id);
+			});
 		}
 	}
 
@@ -173,11 +206,34 @@ export class HtmlView {
 		});
 	}
 
+	bindPanicButton = (handler) => {
+		this.panicButton.addEventListener('click', event => {
+			event.preventDefault();
+			handler();
+		});
+	}
+
+	bindNoteOffButton = (handler) => {
+		//TODO	
+		throw('Not implemented yet. NoteOffButton);
+	}
+
 	bindAddRoute = (handler) => {
 		this.addRouteButton.addEventListener('click', event => {
 			event.preventDefault();
-			handler(this.newRouteInput.value,this.newRouteOutput.value);
+			handler(parseInt(this.newRouteInput.value), parseInt(this.newRouteOutput.value), parseInt(this.newRouteInputChannel.value), parseInt(this.newRouteOutputChannel.value));
 		});
+	}
+
+	bindAllNoteOffButton = (handler) => {
+		this.allNoteOffButton.addEventListener('click', event => {
+			event.preventDefault();
+			handler();
+		});
+	}
+
+	bindDeleteRouteButtons = (handler) => {
+		this.deleteRouteButton = handler;
 	}
 
 }
