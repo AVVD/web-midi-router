@@ -10,6 +10,10 @@ I thoutght I will be able to manage MIDI route with the Linux container thanks t
 So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] project, I decided to try to build a Progressive Web Application[^3] to be able to list MIDI devices and create route to forward MIDI messages thanks to the Web MIDI API[^4].
 
 ## Features
+- v0.0.3
+  - Select chanel while creating a route
+  - Remove a route
+  - Dark mode switch
 - v0.0.2
   - Enhanced Device display (depends on your browser/OS)
   - Route one "Input Device" to multiple "Output Device"
@@ -23,11 +27,7 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 ## Coming Features
 - Filter type of event from an "Input Device" : Note On/Note Off; Pitch bend; Control Change (CC); Program Change (PC); Timing Clock; etc...
 - "Panic!" button to Off all notes on "Output Device"
-- [X] Add a Dark mode switch
-- Remove a route
 - Save and load a "patch" (list of active routes)
-- Select chanel while creating a route
-
 
 ## Possible Enhancement
 - Add a graphical view like ([qjackctl](https://qjackctl.sourceforge.io/)[^5] for [JACK](https://jackaudio.org/)[^6] and [helvum](https://gitlab.freedesktop.org/pipewire/helvum)[^7] for [pipewire](https://pipewire.org/)[^8])
@@ -35,9 +35,8 @@ So! Inspired by the tomarus' [midiseq](https://github.com/tomarus/midiseq)[^2] p
 - Be able to select the source and destination MIDI channel while create a route graphically
 - Enhance concurrent sending. For example if you have more than one "Input Device" routed to the same "Output Device". Maybe it is already supported by Web MIDI API but I haven't tested this.
 
-
 ## Recent Fix
-- [X] Fix the device list after a refresh
+- 
 
 ## Coming Fix
 - 
