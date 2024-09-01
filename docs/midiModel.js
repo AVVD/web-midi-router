@@ -1,19 +1,10 @@
-export class MidiRoute {
-	constructor(input,output,inputChannel=0,outputChannel=0) {
-		this.input = input;
-		this.inputChannel = inputChannel;
-		this.output = output;
-		this.outputChannel = outputChannel;
-	}
-}
-
 export class MidiModel {
 	constructor() {
 		this.inputs = new Array();
 		this.outputs = new Array();
-		// this.routeTable: Array({inputId, iChannel, outputId, oChannel});
+		// this.routeTable: Array({input, iChannel, output, oChannel});
 		this.routeTable = new Array();
-		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Uint8Array(oChannel))))
+		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Array(oChannel))))
 		this.routes = new Map();
 		this.midiAccess = null;
 	}
@@ -64,8 +55,9 @@ export class MidiModel {
 		this.onDeviceChanged();
 	}
 
-	addRoute = (inputId ,outputId, inputChannel=0, outputChannel=0) => {
-		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Uint8Array(oChannel))))
+	addRoute = (inputId ,outputId, inputChannel=-1, outputChannel=-1) => {
+		if((inputChannel < -1 || inputChannel > 15) || (outputChannel < -1 || outputChannel > 15)) return;
+		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Array(oChannel))))
 		try {
 			if (this.routes.get(inputId).get(inputChannel).get(outputId).indexOf(outputChannel)) return;
 		} catch (e) {
@@ -74,25 +66,29 @@ export class MidiModel {
 
 		if (!this.routes.get(inputId)) {
 			this.routes.set(inputId, new Map());
-			this.inputs.get(inputId).onmidimessage = this.forwardMIDIMessage;
+			this.inputs.at(inputId).onmidimessage = this.forwardMIDIMessage;
 		}
 		if (!this.routes.get(inputId).get(inputChannel)) this.routes.get(inputId).set(inputChannel, new Map());
-		if (!this.routes.get(inputId).get(inputChannel).get(outputId)) this.routes.get(inputId).get(inputChannel).set(outputId, new Uint8Array());
+		if (!this.routes.get(inputId).get(inputChannel).get(outputId)) this.routes.get(inputId).get(inputChannel).set(outputId, new Array());
 
 		this.routes.get(inputId).get(inputChannel).get(outputId).push(outputChannel);
 
-		this.routeTable.push({inputId, inputChannel, outputId, outputChannel});
+		this.routeTable.push({'input':this.inputs.at(inputId), inputChannel, 'output':this.outputs.at(outputId), outputChannel});
+		console.log(this.routeTable);
 
 		this.onRouteChanged();
 	}
 
 	deleteRoute = (routeTableIndex) => {
-		let route = this.routeTable.get(routeTableIndex);
+		console.log(routeTableIndex);
+		let route = this.routeTable.at(routeTableIndex);
+		console.log(route);
 
-		// this.routeTable: Array({inputId, iChannel, outputId, oChannel});
-		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Uint8Array(oChannel))))
+		// this.routeTable: Array({input, iChannel, output, oChannel});
+		// this.routes: Map(inputId, Map(iChannel , Map(outputId, Array(oChannel))))
 		
-
+		throw('Not Implemented yet: deleteRoute');
+		// TODO
 		this.routes.get(inputId).get(inputChannel).set(outputId, outputChannel);
 		if (!this.routes.get(inputId).get(inputChannel).get(outputId)) this.routes.get(inputId).get(inputChannel).set(outputId, );
 		if (!this.routes.get(inputId).get(inputChannel)) this.routes.get(inputId).set(inputChannel, new Map());
@@ -117,20 +113,50 @@ export class MidiModel {
 
 	forwardMIDIMessage = (message) => {
 		// this.routeTable = Array({inputId, iChannel, outputId, oChannel);
-		// this.routes = Map(inputId, Map(iChannel , Map(outputId, oChannel)))
+		// this.routes = Map(inputId, Map(iChannel , Map(outputId, Array(oChannel))))
+
+		console.log(message.data);
 		
-		/* ichannel = message.data[0] & 15;
-		 * route = this.routes.get(message.srcElement)
-		 * route.get(0).map();
+		ichannel = message.data[0] & 15;
+		console.log('iChannel: ', ichannel);
+
+		route = this.routes.get(message.srcElement)
+		console.log('route: ', route);
+
+		console.log('iChannel all ? ', route.get(-1));
+		if (route.get(-1)) {
+		 	route.get(0).forEach((outputId) => {
+				console.log('outputId: ', outputId);
+		 		console.log('data: ', message.data);
+				//outputs.get(outputId).send(message.data);
+		 	});
+		}
+
+		route.get(ichannel).forEach((outputId) => {
+			console.log('outputId: ', outputId);
+		 	outputId.forEach((oChannel) => {
+				console.log('oChannel: ', oChannel);
+				console.log('data: ',message.data);
+				let data = message.data;
+		 		data[0] = (data[0] & 0xf0) + oChannel;
+				console.log('newData: ', data);
+		 		outputs.get(outputId).send(data);
+		 	});
+		});
+		
+		/* 
+		 * if (route.get(0)) {
+		 * 	route.get(0).forEach((outputId) => {
+		 * 		outputs.get(outputId).send(message.data);
+		 * 	});
+		 * }
 		 *
-		 * route.get((ichannel).map((output) => {
-		 * 	output.map((ochannel) => {
-		 * 		output.send(message.data); // but replace channel with & or |
+		 * route.get(ichannel).forEach((outputId) => {
+		 * 	output.forEach((ochannel) => {
+		 * 		message.data[0] = (message.data[0] & 0xf0) + (ochannel - 1);
+		 * 		outputs.get(outputId).send(message.data);
 		 * 	});
 		 * });
-		 *
-		 *
-		 *
 		 *
 		 * for (ichannel of this.routes.get(message.srcElement)) {
 		 * 	for (output of ichannel) {
@@ -140,16 +166,42 @@ export class MidiModel {
 		 * 	}
 		 * }
 		 */
+
+		/*
 		for (let output of this.routes.get(message.srcElement)) {
 			output.send(message.data)
 		}
+		*/
 	}
 
 	panic = () => {
-		throw("panic() not implemented yet.")
+		let channels = [...Array(16).keys()];
+		this.outputs.forEach((output) => {
+			channels.forEach((oChannel) => {
+				output.send([(0xb0 + oChannel),0x7b,0x00]);
+			});
+		});
 	}
 
 	allNoteOff = () => {
-		throw("allNoteOff() not implemented yet.")
+		let channels = [...Array(16).keys()];
+		this.routeTable.forEach((route) => {
+			let output = route[2];
+			let oChannel = route[3];
+			if (oChannel === -1) {
+				channels.forEach((channel) => {
+					output.send([0xb0 + channel, 0x7b, 0x00]);
+				});
+			} else {
+				output.send([0xb0 + oChannel, 0x7b, 0x00]);
+			}
+		});
+	}
+
+	noteOff = (outputIndex) => {
+		let channels = [...Array(16).keys()];
+		channels.forEach((ochannel) => {
+			this.outputs.at(outputIndex).send([0xb0 + ochannel, 0x7b, 0x00]);
+		});
 	}
 }

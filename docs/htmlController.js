@@ -10,6 +10,7 @@ export class HtmlController {
 		this.view.bindAddRoute(this.handleAddRoute);
 		this.view.bindPanicButton(this.handlePanic);
 		this.view.bindAllNoteOffButton(this.handleAllNoteOff)
+		this.view.bindDeleteRouteButtons(this.handleDeleteRoute);
 	}
 
 	onMidiStatusChanged = (statusText) => {
@@ -21,17 +22,17 @@ export class HtmlController {
 	}
 
 	onRouteListChanged = () => {
-		this.view.refreshRouteList(this.model.routes);
+		this.view.refreshRouteList(this.model.routeTable);
 	}
 
 	handleRequestMidiAccess = () => {
 		this.model.initMIDI();
 	}
 
-	handleAddRoute = (inputID,outputID) => {
-		this.model.addRoute(inputID,outputID);
+	handleAddRoute = (inputID,outputID,iChannel,oChannel) => {
+		this.model.addRoute(inputID,outputID,iChannel,oChannel);
 	}
-	//handleDeleteRoute
+	
 	//handleDisableRoute
 	//handleEnableRoute
 
@@ -41,5 +42,9 @@ export class HtmlController {
 
 	handleAllNoteOff = () => {
 	        this.model.allNoteOff();
+	}
+
+	handleDeleteRoute = (routeTableIndex) => {
+		this.model.deleteRoute(routeTableIndex);
 	}
 }
