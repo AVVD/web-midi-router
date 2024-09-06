@@ -215,7 +215,7 @@ export class HtmlView {
 
 	bindNoteOffButton = (handler) => {
 		//TODO	
-		throw('Not implemented yet. NoteOffButton);
+		throw('Not implemented yet. NoteOffButton');
 	}
 
 	bindAddRoute = (handler) => {
