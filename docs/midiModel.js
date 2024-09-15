@@ -143,37 +143,61 @@ export class MidiModel {
 		}
 	}
 
-	//TODO: to fix
+	sleep = (ms) => {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	randNoteAndSleep = async (output,oChannel) => {
+		let note = Math.floor(Math.random()*40) + 40;
+		output.send([0x90 + oChannel, note, 0x60]);
+		await this.sleep(1000);
+		output.send([0xb0 + oChannel, 0x78, 0x00]);
+		output.send([0xb0 + oChannel, 0x7b, 0x00]);
+
+		await this.sleep(2000);
+		output.send([0x80 + oChannel, note, 0x60]);
+	}
+
 	panic = () => {
+		// Send All Sound Off and All Note Off to all detected MIDI outputs
 		let channels = [...Array(16).keys()];
 		this.outputs.forEach((output) => {
 			channels.forEach((oChannel) => {
+				//this.randNoteAndSleep(output,oChannel);
 				output.send([(0xb0 + oChannel),0x78,0x00]);
+				output.send([(0xb0 + oChannel),0x7b,0x00]);
 			});
 		});
 	}
 
-	//TODO: to fix
 	allNoteOff = () => {
+		// Send All Sound Off and All Note Off to MIDI outputs set as destination in routes
 		let channels = [...Array(16).keys()];
 		this.routeTable.forEach((route) => {
-			let output = route[2];
-			let oChannel = route[3];
+			console.log(route);
+			let output = route.output;
+			let oChannel = route.outputChannel;
 			if (oChannel === -1 || oChannel === -2) {
 				channels.forEach((channel) => {
+					//this.randNoteAndSleep(output,channel);
 					output.send([0xb0 + channel, 0x78, 0x00]);
+					output.send([0xb0 + channel, 0x7b, 0x00]);
 				});
 			} else {
+				//this.randNoteAndSleep(output,oChannel);
+				output.send([0xb0 + oChannel, 0x78, 0x00]);
 				output.send([0xb0 + oChannel, 0x7b, 0x00]);
 			}
 		});
 	}
 
-	//TODO: to fix
 	noteOff = (outputIndex) => {
+		// Send All Sound Off and All Note Off to a specific MIDI output
 		let channels = [...Array(16).keys()];
 		channels.forEach((oChannel) => {
+			//this.randNoteAndSleep(this.outputs.at(outputIndex),oChannel);
 			this.outputs.at(outputIndex).send([0xb0 + oChannel, 0x78, 0x00]);
+			this.outputs.at(outputIndex).send([0xb0 + oChannel, 0x7b, 0x00]);
 		});
 	}
 }
