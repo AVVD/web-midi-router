@@ -148,7 +148,12 @@ export class HtmlView {
 			newRow.id = index;
 			newRow.insertCell().textContent = output.manufacturer;
 			newRow.insertCell().textContent = output.name;
-			newRow.insertCell().appendChild(this.createElement('button')).textContent = 'Note Off';
+			let noteOffButton = this.createElement('button');
+			noteOffButton.textContent = 'Note Off';
+			newRow.insertCell().appendChild(noteOffButton);
+			noteOffButton.addEventListener('click', event => {
+				this.noteOffButtons(noteOffButton.parentElement.parentElement.id);
+			});
 
 			this.newRouteOutput.options.add(new Option(output.name,index));
 		}
@@ -213,9 +218,8 @@ export class HtmlView {
 		});
 	}
 
-	bindNoteOffButton = (handler) => {
-		//TODO	
-		throw('Not implemented yet. NoteOffButton');
+	bindNoteOffButtons = (handler) => {
+		this.noteOffButtons = handler;
 	}
 
 	bindAddRoute = (handler) => {

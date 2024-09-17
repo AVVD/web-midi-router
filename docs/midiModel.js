@@ -40,10 +40,12 @@ export class MidiModel {
 	refreshMIDI = () => {
 		this.inputs = new Array();
 		for (let input of this.midiAccess.inputs.values()){
+			console.log(input);
 			this.inputs.push(input);
 		}
 		this.outputs = new Array();
 		for (let output of this.midiAccess.outputs.values()){
+			console.log(output);
 			this.outputs.push(output);
 		}
 		this.onDeviceChanged();
@@ -151,8 +153,8 @@ export class MidiModel {
 		let note = Math.floor(Math.random()*40) + 40;
 		output.send([0x90 + oChannel, note, 0x60]);
 		await this.sleep(1000);
-		output.send([0xb0 + oChannel, 0x78, 0x00]);
-		output.send([0xb0 + oChannel, 0x7b, 0x00]);
+		output.send([0xb0 + oChannel, 0x78, 0x10]);
+		output.send([0xb0 + oChannel, 0x7b, 0x10]);
 
 		await this.sleep(2000);
 		output.send([0x80 + oChannel, note, 0x60]);

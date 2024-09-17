@@ -9,6 +9,7 @@ export class HtmlController {
 		this.view.bindRequestMidiAccess(this.handleRequestMidiAccess);
 		this.view.bindAddRoute(this.handleAddRoute);
 		this.view.bindPanicButton(this.handlePanic);
+		this.view.bindNoteOffButtons(this.handleNoteOff)
 		this.view.bindAllNoteOffButton(this.handleAllNoteOff)
 		this.view.bindDeleteRouteButtons(this.handleDeleteRoute);
 	}
@@ -38,6 +39,10 @@ export class HtmlController {
 
 	handlePanic = () => {
 		this.model.panic();
+	}
+
+	handleNoteOff = (outputIndex) => {
+		this.model.noteOff(outputIndex);
 	}
 
 	handleAllNoteOff = () => {
